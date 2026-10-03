@@ -244,7 +244,13 @@ vercel link            # link the directory to a Vercel project
 vercel deploy --prod   # build and deploy to production
 ```
 
-For automatic deployments, connect the GitHub repository to the Vercel project (**Project → Settings → Git**). Every push to `main` then deploys to production, and pull requests get preview URLs. No environment variables are needed.
+The GitHub repository is connected to the Vercel project, so every push to `main` deploys to production automatically and pull requests get preview URLs. No environment variables are needed.
+
+```
+GitHub (push to main) ──► Vercel build ──► https://movie-marathon-scheduler.vercel.app
+```
+
+To set this up for your own fork, import the repository in Vercel or run `vercel git connect` after `vercel link`.
 
 ## Future improvements
 
