@@ -236,21 +236,42 @@ It also includes a **randomised cross-check**: 1,000 random instances (plus 60 w
 
 ## Deployment
 
-The app is deployed on **Vercel**: https://movie-marathon-scheduler.vercel.app
+The app is deployed on **Vercel** (link at the top of this README).
+
+### Automatic deploys, gated by CI
+
+The GitHub repository is connected to the Vercel project:
+
+```text
+push to main ──► Vercel builds a production deployment ──► waits for the GitHub "test-and-build" check
+                                                                 │
+                                       CI passes ──► promoted to the production domain
+                                       CI fails  ──► stays unpromoted; production keeps serving the previous version
+```
+
+- Every push to `main` creates a production build, and pull requests get preview URLs.
+- A **Vercel Deployment Check** requires the `test-and-build` job from [`.github/workflows/ci.yml`](.github/workflows/ci.yml) (lint, typecheck, tests, build) to pass before a build is assigned to the production domain. A commit that breaks the scheduler is built but never goes live.
+- If you rename that job, update the Deployment Check (**Project → Settings → Build and Deployment → Deployment Checks**) to match, because checks are matched by job name.
+- No environment variables are needed.
+
+### Setting it up for a fork
 
 ```bash
 npm i -g vercel
-vercel link            # link the directory to a Vercel project
-vercel deploy --prod   # build and deploy to production
+vercel link                                                   # create/link a Vercel project
+vercel git connect https://github.com/<you>/movie-marathon-scheduler.git
+vercel project checks add --check-name test-and-build --requires none   --blocks deployment-alias --targets production   --source '{"kind":"git-provider","provider":"github","externalCheckName":"test-and-build"}'
 ```
 
-The GitHub repository is connected to the Vercel project, so every push to `main` deploys to production automatically and pull requests get preview URLs. No environment variables are needed.
+The Vercel GitHub App must have access to the repository for `vercel git connect` to succeed.
 
-```
-GitHub (push to main) ──► Vercel build ──► https://movie-marathon-scheduler.vercel.app
+### Manual deploys (fallback only)
+
+```bash
+vercel deploy --prod
 ```
 
-To set this up for your own fork, import the repository in Vercel or run `vercel git connect` after `vercel link`.
+This uploads your **local working tree as it is**, including uncommitted or unpushed changes, and bypasses the Git integration and its CI gate. The next push to `main` replaces it. Use it only for emergencies or projects that are not connected to Git.
 
 ## Future improvements
 

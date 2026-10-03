@@ -6,7 +6,10 @@ on:
   pull_request:
 
 jobs:
-  check:
+  # The job name is required by a Vercel Deployment Check: production is only
+  # promoted after this passes. Renaming it means updating that check too.
+  test-and-build:
+    name: test-and-build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
