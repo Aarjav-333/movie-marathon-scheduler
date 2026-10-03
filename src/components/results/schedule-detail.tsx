@@ -86,7 +86,7 @@ export function ScheduleDetail({ schedule, isOptimal, totalMovies, bufferMinutes
           ))}
         </ol>
 
-        <dl className="grid grid-cols-2 gap-x-6 gap-y-2 rounded-lg bg-muted/50 p-3 text-sm sm:grid-cols-3">
+        <dl className="grid grid-cols-1 gap-x-6 gap-y-1.5 rounded-lg bg-muted/50 p-3 text-sm sm:grid-cols-3 sm:gap-y-2">
           <Row label="Start" value={formatTime(schedule.startTime)} />
           <Row label="Finish" value={formatTime(schedule.endTime)} />
           <Row label="Total duration" value={formatDuration(schedule.totalElapsedMinutes)} />
@@ -118,7 +118,7 @@ function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-baseline justify-between gap-2 sm:block">
       <dt className="text-muted-foreground">{label}</dt>
-      <dd className="font-medium tabular-nums">{value}</dd>
+      <dd className="font-medium whitespace-nowrap tabular-nums">{value}</dd>
     </div>
   );
 }
